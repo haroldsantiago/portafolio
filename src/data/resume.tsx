@@ -35,7 +35,7 @@ export const DATA = {
   description:
     "Desarrollador web full-stack apasionado por crear experiencias digitales atractivas y funcionales. Me especializo en React y Django, con experiencia en diseño UI/UX. Siempre aprendiendo, siempre construyendo.",
   summary:
-    "¡Hola! Soy Harold, desarrollador web enfocado en construir soluciones que combinan creatividad y tecnología. Me especializo en desarrollo con [React y Django](/#skills), y disfruto diseñar interfaces que resuelvan problemas reales. Actualmente participo en el [semillero de investigación IDICA de la Universidad del Valle](/#work), donde he trabajado en proyectos de software para el sector educativo y de investigación. Mi objetivo es crear productos que no solo se vean bien, sino que mejoren la experiencia de las personas que los usan.",
+    "¡Hola! Soy Harold, desarrollador web enfocado en construir soluciones que combinan creatividad y tecnología. Me especializo en desarrollo con [React y Django](/#skills), y disfruto diseñar interfaces que resuelvan problemas reales. Soy estudiante de Tecnología en Desarrollo de Software en la [Universidad del Valle](https://ejecafetero.univalle.edu.co), donde participé en el semillero de investigación IDICA y trabajé en proyectos de software para el sector educativo y de investigación. Mi objetivo es crear productos que no solo se vean bien, sino que mejoren la experiencia de las personas que los usan.",
   avatarUrl: "/fotomia.jpg",
   skills: [
     { name: "React", icon: ReactLight },

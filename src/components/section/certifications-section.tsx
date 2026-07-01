@@ -5,6 +5,7 @@ import { DATA } from "@/data/resume";
 import { FadeIn } from "@/components/fade-in";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { assetPath } from "@/lib/utils";
 
 export default function CertificationsSection() {
   const items = DATA.certifications;
@@ -63,7 +64,7 @@ export default function CertificationsSection() {
                   >
                     <div className="relative flex h-[320px] items-center justify-center bg-muted/40 p-4 sm:h-[440px] lg:h-[520px]">
                       <img
-                        src={cert.image}
+                        src={assetPath(cert.image)}
                         alt={cert.title}
                         className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
                       />
@@ -132,7 +133,7 @@ export default function CertificationsSection() {
             <X className="size-5" />
           </button>
           <img
-            src={items[lightbox].image}
+            src={assetPath(items[lightbox].image)}
             alt={items[lightbox].title}
             className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}

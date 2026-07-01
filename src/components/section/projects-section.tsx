@@ -8,6 +8,7 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import { useState } from "react";
+import { assetPath } from "@/lib/utils";
 
 function ProjectCard({
   project,
@@ -31,7 +32,7 @@ function ProjectCard({
             <video src={project.video} autoPlay loop muted playsInline className="w-full h-full object-cover" />
           ) : project.image && !imgErr ? (
             <img
-              src={project.image}
+              src={assetPath(project.image)}
               alt={project.title}
               className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500"
               onError={() => setImgErr(true)}

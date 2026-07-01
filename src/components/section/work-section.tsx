@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { DATA } from "@/data/resume";
 import { FadeIn, Stagger, StaggerItem } from "@/components/fade-in";
+import { assetPath } from "@/lib/utils";
 
 export default function WorkSection() {
   return (
@@ -29,7 +30,7 @@ export default function WorkSection() {
                 </span>
                 <div className="w-16 h-16 rounded-lg overflow-hidden border border-border bg-muted flex items-center justify-center flex-none">
                   {job.logoUrl
-                    ? <img src={job.logoUrl} alt={job.company} className="w-full h-full object-cover" />
+                    ? <img src={assetPath(job.logoUrl)} alt={job.company} className="w-full h-full object-cover" />
                     : <span className="text-[10px] font-bold text-muted-foreground">{job.company[0]}</span>
                   }
                 </div>

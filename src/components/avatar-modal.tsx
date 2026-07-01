@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { createPortal } from "react-dom";
 import { useModal } from "@/hooks/use-modal";
+import { assetPath } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -49,7 +50,7 @@ export function AvatarModal({ src, alt, fallback }: AvatarModalProps) {
             style={{ borderRadius: "9999px" }}
           >
             <Avatar className="size-24 sm:size-28 md:size-32 border rounded-full shadow-lg ring-4 ring-muted shrink-0">
-              <AvatarImage alt={alt} src={src} />
+              <AvatarImage alt={alt} src={assetPath(src)} />
               <AvatarFallback>{fallback}</AvatarFallback>
             </Avatar>
           </motion.div>

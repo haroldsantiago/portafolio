@@ -1,5 +1,5 @@
 import { DATA } from "@/data/resume";
-import { Mail, Globe, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -18,17 +18,6 @@ export default function Footer() {
               className="p-2 rounded-md hover:text-foreground hover:bg-muted transition-colors"
             >
               <Mail className="size-4" />
-            </a>
-          )}
-
-          {DATA.url && (
-            <a
-              href={DATA.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-md hover:text-foreground hover:bg-muted transition-colors"
-            >
-              <Globe className="size-4" />
             </a>
           )}
 

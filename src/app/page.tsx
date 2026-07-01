@@ -114,7 +114,7 @@ export default function Page() {
                 <div className="flex flex-col gap-2 min-w-0">
                   <FadeIn delay={DELAY}>
                     <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tighter text-neutral-900 dark:text-neutral-100 sm:text-3xl lg:text-4xl">
-                      Hola, soy {DATA.name.split(" ")[0]}
+                      Hola, soy {DATA.name}
                       <svg
                         viewBox="0 0 24 24"
                         className="h-[0.7em] w-[0.7em] text-emerald-500 translate-y-0.5"

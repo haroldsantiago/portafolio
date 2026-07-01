@@ -22,7 +22,7 @@ import { Ai } from "@/components/ui/svgs/ai";
 import { Agents } from "@/components/ui/svgs/agents";
 
 export const DATA = {
-  name: "Harold Vergara",
+  name: "Harold Santiago Vergara",
   initials: "HV",
   url: "https://haroldsantiago.github.io",
   location: "Caicedonia, Colombia",

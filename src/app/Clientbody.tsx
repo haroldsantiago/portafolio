@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navbar } from "@/components/navbar";
 import { SideBento } from "@/components/side-bento";
 import ScrollToTop from "@/components/scrolltotop";
+import { assetPath } from "@/lib/utils";
 
 export default function ClientBody({ children }: { children: React.ReactNode }) {
   return (
@@ -51,7 +52,7 @@ function Banner({
       {src && (
         <Image
           unoptimized
-          src={src}
+          src={assetPath(src)}
           alt="Banner"
           fill
           className="object-cover object-center"

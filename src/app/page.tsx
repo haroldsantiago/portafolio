@@ -15,6 +15,7 @@ import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { SideDecorations } from "@/components/side-decoration";
 import Footer from "@/components/section/footer";
+import { assetPath } from "@/lib/utils";
 
 function SectionWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -265,7 +266,7 @@ export default function Page() {
                       <div className="flex items-center gap-x-3 flex-1 min-w-0">
                         {education.logoUrl ? (
                           <Image
-                            src={education.logoUrl}
+                            src={assetPath(education.logoUrl)}
                             alt={education.school}
                             width={80}
                             height={80}

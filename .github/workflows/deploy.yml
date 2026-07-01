@@ -37,10 +37,8 @@ jobs:
 
       - name: Build
         run: pnpm build
-        # Si despliegas en un repositorio de proyecto (usuario.github.io/repo),
-        # descomenta la siguiente línea y usa el nombre de tu repositorio:
-        # env:
-        #   NEXT_PUBLIC_BASE_PATH: /nombre-del-repo
+        env:
+          NEXT_PUBLIC_BASE_PATH: /portafolio
 
       - name: Disable Jekyll
         run: touch ./out/.nojekyll

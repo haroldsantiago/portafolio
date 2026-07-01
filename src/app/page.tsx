@@ -62,7 +62,7 @@ const detailItems = [
   {
     icon: Code2,
     label: "rol",
-    value: `Tecnólogo en Desarrollo de Software @ ${DATA.work[0].company.split(" — ")[0]}`,
+    value: `Desarrollo de Software @ ${DATA.work[0].company.split(" — ")[0]}`,
   },
   {
     icon: Clock,

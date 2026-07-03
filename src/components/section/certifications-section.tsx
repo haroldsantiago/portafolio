@@ -6,12 +6,20 @@ import { FadeIn } from "@/components/fade-in";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { assetPath } from "@/lib/utils";
+import { motion, AnimatePresence } from "motion/react";
+import { createPortal } from "react-dom";
+import { getAudioContext, playSound } from "@/lib/sound-engine";
+import { dropLeatherSound } from "@/lib/drop-leather";
+import { switchOffSound } from "@/lib/switch-off";
 
 export default function CertificationsSection() {
   const items = DATA.certifications;
   const total = items.length;
   const [index, setIndex] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const prev = useCallback(
     () => setIndex((i) => (i - 1 + total) % total),
@@ -19,10 +27,30 @@ export default function CertificationsSection() {
   );
   const next = useCallback(() => setIndex((i) => (i + 1) % total), [total]);
 
+  const openLightbox = useCallback(async (i: number) => {
+    setLightbox(i);
+    const ctx = getAudioContext();
+    if (ctx.state === "suspended") await ctx.resume();
+    setTimeout(() => {
+      playSound(dropLeatherSound.dataUri, { volume: 0.2 }).catch(() => {});
+    }, 80);
+  }, []);
+
+  const closeLightbox = useCallback(async () => {
+    setLightbox(null);
+    const ctx = getAudioContext();
+    if (ctx.state === "suspended") await ctx.resume();
+    setTimeout(() => {
+      playSound(switchOffSound.dataUri, { volume: 0.2 }).catch(() => {});
+    }, 60);
+  }, []);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (lightbox !== null) {
-        if (e.key === "Escape") setLightbox(null);
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") setLightbox((i) => i !== null ? (i - 1 + total) % total : null);
+        if (e.key === "ArrowRight") setLightbox((i) => i !== null ? (i + 1) % total : null);
         return;
       }
       if (e.key === "ArrowLeft") prev();
@@ -30,7 +58,7 @@ export default function CertificationsSection() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [lightbox, prev, next]);
+  }, [lightbox, prev, next, closeLightbox, total]);
 
   if (total === 0) return null;
 
@@ -58,17 +86,21 @@ export default function CertificationsSection() {
                 <div key={cert.title} className="w-full flex-none">
                   <button
                     type="button"
-                    onClick={() => setLightbox(i)}
+                    onClick={() => openLightbox(i)}
                     className="group block w-full cursor-zoom-in"
                     aria-label={`Ampliar ${cert.title}`}
                   >
-                    <div className="relative flex h-[320px] items-center justify-center bg-muted/40 p-4 sm:h-[440px] lg:h-[520px]">
+                    <motion.div
+                      layoutId={`cert-img-${i}`}
+                      className="relative flex h-[320px] items-center justify-center bg-muted/40 p-4 sm:h-[440px] lg:h-[520px]"
+                      style={{ borderRadius: "0.75rem 0.75rem 0 0" }}
+                    >
                       <img
                         src={assetPath(cert.image)}
                         alt={cert.title}
                         className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
                       />
-                    </div>
+                    </motion.div>
                     <div className="flex items-center justify-between border-t border-border px-4 py-3">
                       <span className="text-sm font-medium text-foreground">
                         {cert.title}
@@ -118,27 +150,73 @@ export default function CertificationsSection() {
         ))}
       </div>
 
-      {lightbox !== null && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-          onClick={() => setLightbox(null)}
-          role="dialog"
-          aria-modal="true"
-        >
-          <button
-            type="button"
-            aria-label="Cerrar"
-            className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-500/10 transition-colors z-10"
-          >
-            <X className="size-5" />
-          </button>
-          <img
-            src={assetPath(items[lightbox].image)}
-            alt={items[lightbox].title}
-            className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
+      {/* Lightbox with motion animations */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {lightbox !== null && (
+            <>
+              {/* Overlay */}
+              <motion.div
+                key="cert-overlay"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                onClick={closeLightbox}
+                className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+                style={{ zIndex: 9998 }}
+              />
+
+              {/* Image container */}
+              <div
+                className="fixed inset-0 flex items-center justify-center p-4"
+                style={{ zIndex: 9999 }}
+              >
+                <motion.div
+                  key={`cert-modal-${lightbox}`}
+                  layoutId={`cert-img-${lightbox}`}
+                  className="relative"
+                  style={{ borderRadius: "0.75rem" }}
+                >
+                  <img
+                    src={assetPath(items[lightbox].image)}
+                    alt={items[lightbox].title}
+                    className="max-h-[85vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+
+                  {/* Close button */}
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.7 }}
+                    transition={{ delay: 0.18, duration: 0.15 }}
+                    type="button"
+                    aria-label="Cerrar"
+                    onClick={closeLightbox}
+                    className="absolute top-3 right-3 size-8 rounded-full bg-background border border-border shadow-lg flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    <X className="size-4" />
+                  </motion.button>
+
+                  {/* Title */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ delay: 0.15, duration: 0.2 }}
+                    className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-background/90 backdrop-blur-sm border border-border"
+                  >
+                    <span className="text-xs font-medium text-foreground">
+                      {items[lightbox].title}
+                    </span>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
       )}
     </div>
   );

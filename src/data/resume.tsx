@@ -205,6 +205,7 @@ export const DATA = {
     },
   ],
   certifications: [
+    { title: "AI Prompts", image: "/certifications/AIprompts.png" },
     { title: "CONCIA 2025", image: "/certifications/Concia2025.png" },
     { title: "MoureDev", image: "/certifications/Mouredev.png" },
     { title: "RRedSI 2025", image: "/certifications/Rredsi2025.png" },

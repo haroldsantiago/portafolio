@@ -95,7 +95,7 @@ export function AvatarModal({ src, alt, fallback }: AvatarModalProps) {
                     style={{ borderRadius: "16px" }}
                   >
                     <Image
-                      src={src}
+                      src={assetPath(src)}
                       alt={alt}
                       width={384}
                       height={384}

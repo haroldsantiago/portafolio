@@ -24,9 +24,15 @@ export function useBackgroundMusic() {
 
   const startPlayback = useCallback(() => {
     const audio = getAudio();
-    audio.play()
-      .then(() => setPlaying(true))
-      .catch((err) => console.warn("[BackgroundMusic]", err));
+    // play() must be called synchronously inside the user gesture handler
+    const promise = audio.play();
+    if (promise !== undefined) {
+      promise
+        .then(() => setPlaying(true))
+        .catch((err) => console.warn("[BackgroundMusic]", err));
+    } else {
+      setPlaying(true);
+    }
   }, []);
 
   const stopPlayback = useCallback(() => {
@@ -40,27 +46,28 @@ export function useBackgroundMusic() {
     else startPlayback();
   }, [playing, startPlayback, stopPlayback]);
 
-  // Auto-start on first user gesture
+  // Auto-start on first user gesture (click or touch)
   useEffect(() => {
     localStorage.removeItem("site-muted");
 
     const handleFirstInteraction = () => {
       if (autoStarted.current) return;
       autoStarted.current = true;
+      // Call synchronously inside the event handler — required for iOS Safari
       startPlayback();
       window.removeEventListener("click", handleFirstInteraction);
-      window.removeEventListener("keydown", handleFirstInteraction);
       window.removeEventListener("touchstart", handleFirstInteraction);
+      window.removeEventListener("keydown", handleFirstInteraction);
     };
 
     window.addEventListener("click", handleFirstInteraction, { passive: true });
+    window.addEventListener("touchend", handleFirstInteraction, { passive: true });
     window.addEventListener("keydown", handleFirstInteraction);
-    window.addEventListener("touchstart", handleFirstInteraction, { passive: true });
 
     return () => {
       window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("touchend", handleFirstInteraction);
       window.removeEventListener("keydown", handleFirstInteraction);
-      window.removeEventListener("touchstart", handleFirstInteraction);
     };
   }, [startPlayback]);
 

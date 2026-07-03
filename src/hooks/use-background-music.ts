@@ -94,12 +94,32 @@ export function useBackgroundMusic() {
     }
   }, [playing, startPlayback, stopPlayback]);
 
-  // Sync with mute state from localStorage on mount
+  // Auto-start on first user interaction (click, scroll, keydown)
   useEffect(() => {
-    const muted = localStorage.getItem("site-muted") === "true";
-    if (!muted) {
-      // Don't autoplay — browser policy requires user gesture
-    }
+    let triggered = false;
+
+    const handleFirstInteraction = () => {
+      if (triggered) return;
+      triggered = true;
+      startPlayback();
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("scroll", handleFirstInteraction);
+      window.removeEventListener("keydown", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+    };
+
+    window.addEventListener("click", handleFirstInteraction);
+    window.addEventListener("scroll", handleFirstInteraction);
+    window.addEventListener("keydown", handleFirstInteraction);
+    window.addEventListener("touchstart", handleFirstInteraction);
+
+    return () => {
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("scroll", handleFirstInteraction);
+      window.removeEventListener("keydown", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Stop music when page is hidden
